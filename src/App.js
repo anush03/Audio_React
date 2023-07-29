@@ -1,43 +1,34 @@
 import React, { useState, useEffect } from "react";
-import "./App.css";
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition";
 import useClipboard from "react-use-clipboard";
-
-//import AudioDownload from "./components/AudioDownload";
 import AudioAnalyser from "react-audio-analyser";
+import "./App.css";
 
 const App = () => {
   const [textToCopy, setTextToCopy] = useState();
-  const [isCopied, setCopied] = useClipboard(textToCopy, {
-    successDuration: 1000,
-  });
-
-  ////////////////////////////////////////////////////////
   const [status, setStatus] = useState("");
   const [audioSrc, setAudioSrc] = useState(null);
   const [audioType, setAudioType] = useState("audio/mp3");
-
   const [activeBtn, setActiveBtn] = useState(false);
+  const [isCopied, setCopied] = useClipboard(textToCopy, {
+    successDuration: 1000,
+  });
 
   const controlAudio = (status) => {
     setStatus(status);
   };
 
-  const changeScheme = (e) => {
-    setAudioType(e.target.value);
-  };
-
   useEffect(() => {
     setAudioType("audio/mp3");
   }, []);
+
   const audioProps = {
     audioType,
-    // audioOptions: {sampleRate: 30000}, // 设置输出音频采样率
     status,
     // audioSrc,
-    timeslice: 1000, // timeslice（https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder/start#Parameters）
+    timeslice: 1000,
     startCallback: (e) => {
       console.log("succ start", e);
     },
@@ -66,9 +57,6 @@ const App = () => {
       document.body.removeChild(downloadLink);
     }
   };
-  ///////////////////////////////////////////////////////
-
-  //subscribe to thapa technical for more awesome videos
 
   const startListening = () => {
     SpeechRecognition.startListening({ continuous: true, language: "en-IN" });
@@ -86,17 +74,13 @@ const App = () => {
   return (
     <>
       <div className="container">
-        <h2>Speech to Text Converter</h2>
-        <br />
-        <p>
-          A React hook that converts speech from the microphone to text and
-          makes it available to your React components.
-        </p>
-        <AudioAnalyser {...audioProps}></AudioAnalyser>
+        <h2>Voice Recording, MP3 Generation, and Transcription</h2>
+        <div className="audio-analyser">
+          <AudioAnalyser {...audioProps}></AudioAnalyser>
+        </div>
         <div className="main-content" onClick={() => setTextToCopy(transcript)}>
           {activeBtn && transcript}
         </div>
-
         <div className="btn-style">
           <button onClick={setCopied}>
             {isCopied ? "Copied!" : "Copy to clipboard"}
@@ -107,7 +91,6 @@ const App = () => {
               SpeechRecognition.stopListening();
               controlAudio("inactive");
               setActiveBtn(true);
-              //SpeechRecognition.resetTranscript();
             }}
           >
             Stop Listening
@@ -119,22 +102,6 @@ const App = () => {
             </button>
           )}
         </div>
-      </div>
-
-      <div className="btn-box">
-        {/* <button className="btn" onClick={() => controlAudio("recording")}>
-            Start
-          </button>
-          <button className="btn" onClick={() => controlAudio("paused")}>
-            Pause
-          </button>
-          <button className="btn" onClick={() => controlAudio("inactive")}>
-            Stop
-          </button> */}
-
-        {/* <button onClick={downloadAudio} disabled={!audioSrc}>
-            Download Audio
-          </button> */}
       </div>
     </>
   );
