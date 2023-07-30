@@ -75,7 +75,7 @@ const App = () => {
       if (audioData) {
         const downloadLink = document.createElement("a");
         downloadLink.href = audioData;
-        downloadLink.download = "recorded_audio.mp4";
+        downloadLink.download = "recorded_audio.mp3";
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
